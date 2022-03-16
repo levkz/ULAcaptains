@@ -156,11 +156,11 @@
         )
         document.addEventListener('keydown', scrollCharts)
         document.removeEventListener('keydown', anyKeyPressed)
-        document.removeEventListener('click', anyKeyPressed)
+        document.removeEventListener('touchend', anyKeyPressed)
       }
 
       document.addEventListener('keydown', anyKeyPressed)
-      document.addEventListener('click', anyKeyPressed)
+      document.addEventListener('touchend', anyKeyPressed)
     </script>
   </body>
 </html>
