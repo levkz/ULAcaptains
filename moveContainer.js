@@ -1,7 +1,7 @@
 let step = 100
 let a = -45
 let minOffset = a
-let maxOffset = a - (votes.length - 1) * step
+let maxOffset = a - (groups.length - 1) * step
 
 chartsContainer.setAttribute('style', `transform: translateX(${a}vh);`)
 function scrollCharts(event) {
