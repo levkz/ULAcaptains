@@ -1,19 +1,72 @@
+class Candidate {
+  constructor(name, group) {
+    
+    this.name = name
+    this.group = group
+    this.voters = Object.fromEntries(group.votes.filter(([key, value]) => value === this.name))
+    this.votes = this.voters.length
+  }
+  
+  get votes() {
+    return this.voters.length
+  }
+  
+  set votes(value) {
+    return
+  }
+  
+
+}
+class Group {
+  constructor(voters_data) {
+    this.voters = Object.fromEntries(voters_data.map(([key, value]) => [key, value[0]]))
+
+    this.candidatesArr = Array.from(new Set(this.voters.values()))
+    this.candidates = {}
+    for (candidate of candidatesArr) {
+      this.candidates[candidate] = new Candidate(candidate, this)
+    }
+
+    this.votes = this.candidatesArr.map(candidate => this.candidates[candidate].votes)
+  }
+
+  getData() {
+    return [this.candidates, this.votes]
+  }
+
+
+}
+
+
 let candidates = []
 let votes_counter = []
 let votes = []
 let data = {}
+let groups = {}
 
 async function FetchCandidates() {
   let res = await fetch("./data/candidates.json")
   let data = await res.json()
 
-  candidates = data
-  votes_counter = new Array(candidates.length)
-  for (let i = 0; i < votes_counter.length; i++) {
-    votes_counter[i] = 0
+  let groups_data = {}
+  let groupSet = new Set()
+  for (voter of data) {
+    groupSet.add(voter[1])
+  }
+  groupSet.forEach(group => {
+    groups_data[group] = {}
+  })
+
+  for (voter in data) {
+    // data[voter][1] === group
+    groups_data[data[voter][1]][voter] = data[voter]
+  }
+
+  for (group in groups_data) {
+    groups[group] = new Group(groups_data[group])
   }
   
-  votes.push(new votesData("Whoever", candidates, votes_counter))
+  votes.push(new votesData(groups))
   await FetchVotes()
 }
 FetchCandidates()
