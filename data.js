@@ -4,12 +4,9 @@ const chartsContainer = globalContainer.querySelector('#chartsContainer')
 Chart.defaults.color = '#1de8a4'
 Chart.defaults.font.size = 16
 
-class votesData {
-  static votesCounter = 0
-  constructor(title, captains, votes) {
-    this.id = votesData.votesCounter
-    votesData.votesCounter++
-
+class groupDataWrapper {
+  constructor(group) {
+    let [candidates, votesCount] = group.getData() 
     let colors = [
       '#f44336',
       '#ffeb3b',
@@ -24,13 +21,14 @@ class votesData {
       //
       ;[colors[i], colors[r]] = [colors[r], colors[i]]
     }
+
     this.data = {
-      labels: captains,
+      labels: candidates,
       datasets: [
         {
           label: 'Голосуй',
-          data: votes,
-          backgroundColor: colors.slice(0, captains.length),
+          data: votesCount,
+          backgroundColor: colors.slice(0, candidates.length),
           hoverOffset: 4,
         },
       ],
@@ -43,7 +41,7 @@ class votesData {
         plugins: {
           title: {
             display: true,
-            text: title,
+            text: group.name,
             color: '#1de8a4',
           },
         },
