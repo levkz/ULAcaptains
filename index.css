@@ -53,13 +53,13 @@ Styles
   background-color: #2e3980;
   border-radius: 1rem;
   display: flex;
-  width: 90vh;
-  min-width: 90vh;
-  height: 90vh;
+  width: 90vmin;
+  min-width: 90vmin;
+  height: 90vmin;
   align-items: center;
   justify-content: space-around;
   flex-direction: column;
-  margin-right: 10vh;
+  margin-right: 10vmin;
 }
 
 .holder {

@@ -3,8 +3,28 @@ let a = -45
 let minOffset = a
 let maxOffset = a - (groups.length - 1) * step
 
-chartsContainer.setAttribute('style', `transform: translateX(${a}vh);`)
+function ChangeChartByClick(event) {
+  scrollCharts({
+    code : Math.round(event.clientX/getWidth()) ? "ArrowRight" : "ArrowLeft"
+  })
+  
+}
+document.addEventListener("click", ChangeChartByClick);
+
+function getWidth() {
+  return Math.max(
+    document.body.scrollWidth,
+    document.documentElement.scrollWidth,
+    document.body.offsetWidth,
+    document.documentElement.offsetWidth,
+    document.documentElement.clientWidth
+  );
+}
+
+
+chartsContainer.setAttribute('style', `transform: translateX(${a}vmin);`)
 function scrollCharts(event) {
+  console.log(event)
   if (event.code == 'ArrowLeft') {
     a += step
   }
@@ -13,7 +33,7 @@ function scrollCharts(event) {
   }
   a = Math.max(maxOffset, a)
   a = Math.min(minOffset, a)
-  chartsContainer.setAttribute('style', `transform: translateX(${a}vh);`)
+  chartsContainer.setAttribute('style', `transform: translateX(${a}vmin);`)
 }
 
 globalContainer.setAttribute('style', `transform: translate(${0}vh, 100vh);`)
