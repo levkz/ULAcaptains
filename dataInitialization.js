@@ -1,6 +1,15 @@
+function anyKeyPressed(event) {
+  globalContainer.setAttribute(
+    'style',
+    `transform: translate(-100vw, 0);`
+  )
+  document.addEventListener('keydown', scrollCharts)
+  document.removeEventListener('keydown', anyKeyPressed)
+  document.removeEventListener('touchend', anyKeyPressed)
+}
+
 class Candidate {
   constructor(name, group) {
-    
     this.name = name
     this.group = group
     this.voters = Object.entries(group.voters).filter(([key, value]) => value === this.name)
@@ -24,87 +33,73 @@ class Group {
   constructor(voters_data, name = "Group name") {
     this.name = name;
     this.id = Group._id++
-    this.voters = Object.fromEntries(Object.entries(voters_data).map(([key, value]) => [key, value[0]]))
+    
+    this.initData(voters_data)
+    this.wrap()
+  }
 
+  initData(voters_data) {
+    this.voters = Object.fromEntries(Object.entries(voters_data).map(([key, value]) => [key, value[0]]))
+    
     this.candidatesArr = Array.from(new Set(Object.values(this.voters)))
     this.candidates = {}
     for (let candidate of this.candidatesArr) {
       this.candidates[candidate] = new Candidate(candidate, this)
     }
-
+    
+  }
+  
+  updateData(voters_data) {
+    this.initData(voters_data)
+    
     this.votes = this.candidatesArr.map(candidate => this.candidates[candidate].votes)
-
-    this.wrapper = new groupDataWrapper(this)
+    this.chartData.labels = this.candidatesArr
+    this.chartData.datasets[0].data = this.votes
   }
-
-  getData() {
-    return [this.candidatesArr, this.votes]
+  
+  wrap() {
+   let colors = [
+     '#f44336',
+     '#ffeb3b',
+     '#8a4af3',
+     '#8bc34a',
+     '#ffc107',
+     '#1ee9a4',
+   ]
+  
+   for (let i = 0; i < colors.length; i++) {
+     let r = Math.floor(colors.length * Math.random())
+     //
+     ;[colors[i], colors[r]] = [colors[r], colors[i]]
+   }
+  
+   this.chartData = {
+     labels: this.candidatesArr,
+     datasets: [
+       {
+         label: 'Голосуй',
+         data: this.votes,
+         backgroundColor: colors,
+         hoverOffset: 4,
+       },
+     ],
+   }
+  
+   
+  
+   this.chartConfig = {
+     type: 'doughnut',
+     data: this.chartData,
+     options: {
+       plugins: {
+         title: {
+           display: true,
+           text: this.name,
+           color: '#1de8a4',
+         },
+       },
+     },
+   }
   }
-
-
-}
-
-let groups = {}
-
-async function FetchVotes() {
-  Group._id = 0
-  let data
-  while (true) {
-    try {
-      let res = await fetch("https://fierce-coast-81098.herokuapp.com/https://jsonbase.com/ULAdb/candidates_votes")
-      if (!res.ok) {
-        throw new Error("couln't fetch the data, trying again")
-      }
-      data = await res.json()
-      break
-    }
-    catch(e){
-      console.error(e)
-      }
-  }
-
-  let groups_data = {}
-
-  let groupSet = new Set(Object.values(data).map(value => value[1]))
-  groupSet.forEach(group => {
-    groups_data[group] = {}
-  })
-
-  for (let [key, value] of Object.entries(data)) {
-    // data[voter][1] === group
-    groups_data[value[1]][key] = value
-  }
-
-  for (let group in groups_data) {
-    groups[group] = new Group(groups_data[group], group)
-  }
-
-  chartsUpdate()
-}
-
-FetchVotes()
-votingTimeout = setTimeout(FetchVotes, 2000)
-
-
-function chartsUpdate() {
-  maxOffset = a - (Object.keys(groups).length - 1) * step
-  let chartHTML = ''
-  for (let group of Object.values(groups)) {
-    console.log(group)
-    chartHTML += `
-                <div class="flex">
-                  <div class="holder">
-                    <canvas id="chart${group.id}" height="1000" width="1000"></canvas>
-                  </div>
-                </div>
-        `
-  }
-  chartsContainer.innerHTML = chartHTML
-  for (let group of Object.values(groups)) {
-    charts[group.id] = new Chart(
-      document.getElementById(`chart${group.id}`).getContext('2d'),
-      group.wrapper.config
-    )
-  }
-  console.log(charts)
+  
 }
