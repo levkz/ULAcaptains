@@ -47,9 +47,8 @@ async function startFetching() {
 let interv = startFetching()
 
 function chartsUpdate() {
-  maxOffset = a - (Object.keys(groups).length - 1) * step
-
-  for (let group of Object.values(groups)) {
+    
+    for (let group of Object.values(groups)) {
     if (charts[group.id] === undefined) {
         let flexElement = document.createElement("div")
         flexElement.className = "flex"
@@ -61,7 +60,7 @@ function chartsUpdate() {
         chartElement.id = `chart${group.id}`
         chartElement.setAttribute("height", "1000")
         chartElement.setAttribute("width", "1000")
-
+        
         holderElement.appendChild(chartElement)
         flexElement.appendChild(holderElement)
         chartsContainer.appendChild(flexElement)
@@ -76,7 +75,8 @@ function chartsUpdate() {
       } else {
             charts[group.id].update()
         }
-
-}
+        
+        maxOffset = a - (charts.length - 1) * step
+    }
 }
 

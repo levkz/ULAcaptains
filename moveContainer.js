@@ -1,7 +1,7 @@
 let step = 100
 let a = -45
 let minOffset = a
-let maxOffset = a - (groups.length - 1) * step
+let maxOffset = a - (charts.length - 1) * step
 
 function ChangeChartByClick(event) {
   scrollCharts({
@@ -24,7 +24,6 @@ function getWidth() {
 
 chartsContainer.setAttribute('style', `transform: translateX(${a}vmin);`)
 function scrollCharts(event) {
-  console.log(event)
   if (event.code == 'ArrowLeft') {
     a += step
   }
