@@ -4,8 +4,9 @@ function anyKeyPressed(event) {
     `transform: translate(-100vw, 0);`
   )
   document.addEventListener('keydown', scrollCharts)
+  document.addEventListener('click', ChangeChartByClick)
   document.removeEventListener('keydown', anyKeyPressed)
-  document.removeEventListener('touchend', anyKeyPressed)
+  document.removeEventListener('click', anyKeyPressed)
 }
 
 class Candidate {

@@ -7,9 +7,7 @@ function ChangeChartByClick(event) {
   scrollCharts({
     code : Math.round(event.clientX/getWidth()) ? "ArrowRight" : "ArrowLeft"
   })
-  
 }
-document.addEventListener("click", ChangeChartByClick);
 
 function getWidth() {
   return Math.max(

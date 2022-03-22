@@ -40,7 +40,7 @@ async function FetchVotes() {
 async function startFetching() {
     await FetchVotes()
     document.addEventListener('keydown', anyKeyPressed)
-    document.addEventListener('touchend', anyKeyPressed)
+    document.addEventListener('click', anyKeyPressed)
     return setInterval(2000, FetchVotes())
 }
 
