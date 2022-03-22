@@ -36,7 +36,7 @@ async function startFetching() {
 let interv = startFetching()
 
 function chartsUpdate() {
-    
+    let nameLabel
     for (let group of Object.values(groups)) {
     if (charts[group.id] === undefined) {
         let flexElement = document.createElement("div")
@@ -64,7 +64,6 @@ function chartsUpdate() {
       } else {
             charts[group.id].update()
         }
-        
         maxOffset = a - (charts.length - 1) * step
     }
 }
