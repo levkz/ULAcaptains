@@ -9,24 +9,6 @@ function anyKeyPressed(event) {
   document.removeEventListener('click', anyKeyPressed)
 }
 
-class Candidate {
-  constructor(name, group) {
-    this.name = name
-    this.group = group
-    this.voters = Object.entries(group.voters).filter(([key, value]) => value === this.name)
-    this.votes = this.voters.length
-  }
-  
-  get votes() {
-    return this.voters.length
-  }
-  
-  set votes(value) {
-    return
-  }
-  
-
-}
 class Group {
 
   static _id = 0
@@ -40,20 +22,13 @@ class Group {
   }
 
   initData(voters_data) {
-    this.voters = Object.fromEntries(Object.entries(voters_data).map(([key, value]) => [key, value[0]]))
-    
-    this.candidatesArr = Array.from(new Set(Object.values(this.voters)))
-    this.candidates = {}
-    for (let candidate of this.candidatesArr) {
-      this.candidates[candidate] = new Candidate(candidate, this)
-    }
-    
+    this.votes = Array.from(Object.entries(voters_data).map(candidateData => candidateData[1]))
+    this.candidatesArr = Array.from(Object.entries(voters_data).map(candidateData => candidateData[0]))
   }
   
   updateData(voters_data) {
     this.initData(voters_data)
-    
-    this.votes = this.candidatesArr.map(candidate => this.candidates[candidate].votes)
+
     this.chartData.labels = this.candidatesArr
     this.chartData.datasets[0].data = this.votes
   }

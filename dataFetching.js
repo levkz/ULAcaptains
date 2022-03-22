@@ -1,31 +1,21 @@
 let groups = {}
 
 async function FetchVotes() {
-    let data
+    let groups_data
     while (true) {
         try {
             let res = await fetch("https://fierce-coast-81098.herokuapp.com/https://jsonbase.com/ULAdb/candidates_votes")
             if (!res.ok) {
                 throw new Error("couln't fetch the data, trying again")
             }
-            data = await res.json()
+            groups_data = await res.json()
             break
         }
         catch(e){
             console.error(e)
         }
     }
-  let groups_data = {}
-
-  let groupSet = new Set(Object.values(data).map(value => value[1]))
-  groupSet.forEach(group => {
-    groups_data[group] = {}
-  })
-
-  for (let [key, value] of Object.entries(data)) {
-    groups_data[value[1]][key] = value
-  }
-
+    
   for (let group in groups_data) {
     if (groups[group] === undefined) {
         groups[group] = new Group(groups_data[group], group)
@@ -34,14 +24,13 @@ async function FetchVotes() {
     }
   }
   chartsUpdate()
-  
 }
 
 async function startFetching() {
     await FetchVotes()
     document.addEventListener('keydown', anyKeyPressed)
     document.addEventListener('click', anyKeyPressed)
-    return setInterval(2000, FetchVotes())
+    return setInterval(FetchVotes, 2000)
 }
 
 let interv = startFetching()
